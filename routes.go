@@ -1,4 +1,4 @@
-package handler
+package main
 
 import (
 	"encoding/json"
@@ -9,15 +9,28 @@ import (
 	"pokemon-gin/types"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	app *gin.Engine
-)
+func rateLimit(c *gin.Context) {
+	ip := c.ClientIP()
+	value := int(ips.Add(ip, 1))
+	if value%50 == 0 {
+		fmt.Printf("ip: %s, count: %d\n", ip, value)
+	}
+	if value >= 200 {
+		if value%200 == 0 {
+			fmt.Println("ip blocked")
+		}
+		c.Abort()
+		c.String(http.StatusServiceUnavailable, "you were automatically banned :)")
+	}
+}
 
 func getPokemon(c *gin.Context) {
+	fmt.Println(time.Now())
 	min := 0
 	max := 1000
 	length, err := strconv.Atoi(c.Query("length"))
@@ -47,6 +60,7 @@ func getPokemon(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, pokeArr)
+	fmt.Println(time.Now())
 }
 
 func getPokemonByID(i int, wg *sync.WaitGroup, ch chan<- types.Pokemon) {
@@ -68,22 +82,4 @@ func getPokemonByID(i int, wg *sync.WaitGroup, ch chan<- types.Pokemon) {
 		fmt.Print(err3)
 	}
 	ch <- poke
-}
-
-func routes(router *gin.RouterGroup) {
-	router.GET("/pokemon", getPokemon)
-}
-
-func init() {
-	app = gin.New()
-	app.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Use /api/pokemon?length=5 for getting 5 random pokemon")
-	})
-	router := app.Group("/api")
-	routes(router)
-}
-
-func Handler(w http.ResponseWriter, r *http.Request) {
-	gin.SetMode(gin.ReleaseMode)
-	app.ServeHTTP(w, r)
 }
