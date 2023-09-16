@@ -1,9 +1,7 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.go"
+  "functions": {
+    "api/pokemon.go": {
+      "runtime": "vercel/go@0.2.0"
     }
-  ]
+  }
 }

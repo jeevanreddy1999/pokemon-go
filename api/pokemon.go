@@ -76,11 +76,8 @@ func getPokemonByID(i int, wg *sync.WaitGroup, ch chan<- types.Pokemon) {
 // 	fmt.Println("Server started on 8080 port")
 // }
 
-func Handler(c *gin.Context) {
-	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.IndentedJSON(http.StatusOK, "Hello")
-	})
-	router.GET("/pokemon", getPokemon)
-	router.ServeHTTP(c.Writer, c.Request)
+func Handler(w http.ResponseWriter, r *http.Request) {
+	router := gin.New()
+	router.GET("/api/pokemon", getPokemon)
+	router.ServeHTTP(w, r)
 }
