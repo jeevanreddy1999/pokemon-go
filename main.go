@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"example/web-service-gin/types"
 	"fmt"
 	"io"
 	"math/rand"
 	"net/http"
+	"pokemon-gin/types"
 	"strconv"
 	"sync"
 
