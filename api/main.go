@@ -13,6 +13,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	app *gin.Engine
+)
+
 func getPokemon(c *gin.Context) {
 	min := 0
 	max := 1000
@@ -66,21 +70,17 @@ func getPokemonByID(i int, wg *sync.WaitGroup, ch chan<- types.Pokemon) {
 	ch <- poke
 }
 
-// func main() {
-// 	router := gin.Default()
-// 	router.GET("/", func(c *gin.Context) {
-// 		c.IndentedJSON(http.StatusOK, "Hello")
-// 	})
-// 	router.GET("/pokemon", getPokemon)
-// 	router.Run(":8080")
-// 	fmt.Println("Server started on 8080 port")
-// }
+func routes(router *gin.RouterGroup) {
+	router.GET("/pokemon", getPokemon)
+}
+
+func init() {
+	app = gin.New()
+	router := app.Group("/api")
+	routes(router)
+}
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	router := gin.New()
-	router.GET("/", func(c *gin.Context) {
-		c.IndentedJSON(http.StatusOK, "Hello")
-	})
-	router.GET("/api/pokemon", getPokemon)
-	router.ServeHTTP(w, r)
+	gin.SetMode(gin.ReleaseMode)
+	app.ServeHTTP(w, r)
 }
