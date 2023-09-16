@@ -76,6 +76,9 @@ func routes(router *gin.RouterGroup) {
 
 func init() {
 	app = gin.New()
+	app.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "Use /api/pokemon?length=5 for getting 5 random pokemon")
+	})
 	router := app.Group("/api")
 	routes(router)
 }
