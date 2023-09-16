@@ -35,7 +35,7 @@ func StartGin() {
 	router := gin.New()
 	router.Use(rateLimit, gin.Recovery())
 	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Use /pokemon")
+		c.String(http.StatusOK, "Use /pokemon?length=5 to get 5 random pokemons")
 	})
 
 	router.GET("/pokemon", getPokemon)
