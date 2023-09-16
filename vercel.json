@@ -1,7 +1,7 @@
 {
-  "functions": {
-    "api/pokemon.go": {
-      "runtime": "vercel/go@0.2.0"
+  "build": {
+    "env": {
+      "GO_BUILD_FLAGS": "-ldflags '-s -w'"
     }
   }
 }

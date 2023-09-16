@@ -78,6 +78,9 @@ func getPokemonByID(i int, wg *sync.WaitGroup, ch chan<- types.Pokemon) {
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	router := gin.New()
+	router.GET("/", func(c *gin.Context) {
+		c.IndentedJSON(http.StatusOK, "Hello")
+	})
 	router.GET("/api/pokemon", getPokemon)
 	router.ServeHTTP(w, r)
 }
